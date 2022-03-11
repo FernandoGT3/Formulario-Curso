@@ -14,8 +14,13 @@ class ValidateForm {
         event.preventDefault();
         //console.log('Não enviou');
 
-        this.checkFields();
-        this.checkPasswords();
+        const fieldsIsValid = this.checkFields();
+        const passwordsIsValid = this.checkPasswords();
+
+        if(fieldsIsValid && passwordsIsValid){
+            alert('Cadastrado com Sucesso!');
+            this.form.submit();
+        }
     }
 
     checkFields() {
@@ -76,7 +81,24 @@ class ValidateForm {
     }
 
     checkPasswords(){
-        
+        let valid = true;
+
+        const password = this.form.querySelector('.password');
+        const repeatPassword = this.form.querySelector('.repeat-password');
+
+        if(password.value !== repeatPassword.value) {
+            const message = 'As senhas nos campos "Senha" e "Repetir Senha" precisam ser iguais'
+            this.createError(password, message);
+            this.createError(repeatPassword, message);
+            return false;
+        }
+
+        if(password.value.length < 6 || password.value.length > 12){
+            const message = 'Senha Inválida, deve conter entre 6 e 12 caracteres'
+            this.createError(password, message);
+            valid = false;
+        }
+        return valid;
     }
 
     createError(field, message) {
