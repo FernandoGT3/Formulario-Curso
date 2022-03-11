@@ -12,7 +12,7 @@ class ValidateForm {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log('Não enviou');
+        //console.log('Não enviou');
 
         this.checkFields();
     }
@@ -20,14 +20,33 @@ class ValidateForm {
     checkFields(){
         let valid = true;
 
+        for(let errorText of this.form.querySelectorAll('.error-text')){
+            errorText.remove();
+        }
+
         for(let field of this.form.querySelectorAll('.validate')){
             if(!field.value){
                 const message = `Campo "${field.previousElementSibling.innerHTML}" não pode estar em branco`;
                 this.createError(field, message);
                 valid = false;
             }
-            console.log(field);
+            //console.log(valid);
+
+            if(field.classList.contains('cpf')){
+                if(!this.validationCPF(field)) valid = false;
+            }
         }
+    }
+
+    validationCPF(field){
+        const cpf = new ValidaCPF(field.value);
+
+        if(!cpf.valida()){
+            const message = 'CPF Inválido'
+            this.createError(field, message);
+            return false;
+        }
+        return true;
     }
 
     createError(field, message){
